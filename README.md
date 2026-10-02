@@ -1,11 +1,11 @@
 # Secretary AI
 
-[![Tests](https://github.com/tnadiedjoa/Secretary-Ai/actions/workflows/tests.yml/badge.svg)](https://github.com/tnadiedjoa/Secretary-Ai/actions/workflows/tests.yml)
+[![Tests](https://github.com/tnadiedjoa/Secretary-AI/actions/workflows/tests.yml/badge.svg)](https://github.com/tnadiedjoa/Secretary-AI/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Voice and language model assistants that take over repetitive tasks of a medical secretary: writing prescriptions from a doctor's dictation, triaging the office inbox and rescheduling appointments over a spoken conversation.
 
-First-year engineering project at [Télécom Paris](https://www.telecom-paris.fr/), 2025. The user interface and the voice assistant speak French, since the project targets French medical practices; the code and documentation are in English.
+First-year engineering project at [Télécom Paris](https://www.telecom-paris.fr/), 2025. The user interface and the voice assistant speak French, since the project targets French medical practices; the code and documentation are in English. After the project, Théophile Nadiedjoa restructured the code into a single package and added the test suite, continuous integration, in-browser voice recording, a Docker image and the public demo (September 2026).
 
 **[Try the live demo](https://secretary-ai-7jhj.onrender.com)**: fictional patients and mailbox, voice or typed input. The free hosting sleeps when unused, so the first visit can take about a minute.
 
@@ -31,8 +31,8 @@ The browser records the microphone with the `MediaRecorder` API and sends the au
 
 Every agent talks to the models through a common interface, `BaseAIModel` (`basic`, `reflexion`, `parse`, `synthesize`, `transcribe`), so the backend can be swapped without touching the agents:
 
-- `APIClient` works with any OpenAI-compatible API for chat, transcription and structured outputs. With OpenAI it uses `gpt-4o-mini`, `gpt-4o-mini-transcribe` and `gpt-4o-mini-tts`; with [Groq](https://groq.com/), which has a free tier, it uses `gpt-oss-120b` and `whisper-large-v3-turbo`. Google Cloud Text-to-Speech can be used for the French voice.
-- `LocalClient` is an experimental implementation running Hugging Face models locally (Whisper, MMS-TTS). It keeps patient data on the machine but is not wired into the agents yet.
+- `APIClient` works with any OpenAI-compatible API for chat, transcription and structured outputs. With OpenAI it uses `gpt-4o-mini` (dialogue and extraction), `gpt-4o-mini-transcribe` and `gpt-4o-mini-tts`; with [Groq](https://groq.com/), which has a free tier, it uses `gpt-oss-120b` for the dialogue, `gpt-oss-20b` for structured extraction and `whisper-large-v3-turbo`. Google Cloud Text-to-Speech can be used for the French voice. The `reflexion` method (`o4-mini` with OpenAI) is not used by the current agents.
+- `LocalClient` is an unfinished stub running Hugging Face models locally: transcription (Whisper) and French speech (MMS-TTS) work, but its chat model (DialoGPT-small) is a placeholder that cannot hold a French conversation or extract structured data. It is not wired into the agents.
 
 ```
 secretary_ai/
@@ -40,7 +40,7 @@ secretary_ai/
   ai/
     base_model.py            BaseAIModel interface and Message
     api_client.py            OpenAI, Groq and Google Cloud TTS backend
-    local_client.py          experimental Hugging Face backend
+    local_client.py          unfinished Hugging Face backend (not used)
     audio_controller.py      local microphone for the command line mode
   agents/
     prescription_agent.py    extraction, corrections and PDF
@@ -61,8 +61,8 @@ The report on the societal and environmental impact of the project (data privacy
 Requirements: Python 3.10 or later, an OpenAI API key or a free Groq API key (set `AI_PROVIDER=groq` and `TTS_ENGINE=browser`) and, for the mail assistant, a Gmail account with an [app password](https://myaccount.google.com/apppasswords). Setting `DEMO_MODE=1` replaces Gmail with a fictional mailbox and fills the agenda with fictional appointments, from 20 months ago to 4 months ahead, regenerated at each start.
 
 ```bash
-git clone https://github.com/tnadiedjoa/Secretary-Ai.git
-cd Secretary-Ai
+git clone https://github.com/tnadiedjoa/Secretary-AI.git
+cd Secretary-AI
 python -m venv .venv
 source .venv/bin/activate        # on Windows: .venv\Scripts\activate
 pip install -r requirements.txt
@@ -72,13 +72,13 @@ python -m web.app
 
 The app runs on http://127.0.0.1:5000, and must be started from the repository root. Browsers only give microphone access to `localhost` or HTTPS pages. Outside the demo mode the agenda starts empty; `python -m secretary_ai.agents.demo_calendar` fills it with fictional appointments.
 
-The agents can also run in the terminal with the local microphone and speakers, for example `python -m secretary_ai.agents.prescription_agent`. This mode needs PyAudio, installed with `pip install -e ".[cli]"`. The experimental local backend is installed with `pip install -e ".[local]"`.
+The agents can also run in the terminal with the local microphone and speakers, for example `python -m secretary_ai.agents.prescription_agent`. This mode needs PyAudio, installed with `pip install -e ".[cli]"`. The unfinished local backend is installed with `pip install -e ".[local]"`.
 
 ## Deployment
 
 The repository ships a `Dockerfile` and a Render blueprint (`render.yaml`) for a public demo. The demo mode uses the fictional mailbox and agenda, limits each visitor to 30 AI requests per hour, and resets the agenda whenever the container restarts.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/tnadiedjoa/Secretary-Ai)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/tnadiedjoa/Secretary-AI)
 
 The blueprint runs on Groq's free tier with the browser's voice, so the demo costs nothing: Render only asks for a `GROQ_API_KEY`. The live demo is redeployed automatically on every push to `master`.
 
