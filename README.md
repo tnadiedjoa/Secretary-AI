@@ -5,7 +5,7 @@
 
 Voice and language model assistants that take over repetitive tasks of a medical secretary: writing prescriptions from a doctor's dictation, triaging the office inbox and rescheduling appointments over a spoken conversation.
 
-First-year engineering project at [Télécom Paris](https://www.telecom-paris.fr/), 2025. The user interface and the voice assistant speak French, since the project targets French medical practices; the code and documentation are in English. After the project, Théophile Nadiedjoa restructured the code into a single package and added the test suite, continuous integration, in-browser voice recording, a Docker image and the public demo (September 2026).
+First-year engineering project at [Télécom Paris](https://www.telecom-paris.fr/), 2025. The user interface and the voice assistant speak French, since the project targets French medical practices; the code and this README are in English. After the project, Théophile Nadiedjoa rewrote most of the code as a single package, keeping the team's architecture, and added the test suite, continuous integration, in-browser voice recording, a Docker image and the public demo (September 2026).
 
 **[Try the live demo](https://secretary-ai-7jhj.onrender.com)**: fictional patients and mailbox, voice or typed input. The free hosting sleeps when unused, so the first visit can take about a minute.
 
@@ -27,11 +27,11 @@ Every voice interaction also accepts typed text, so the app can be tried without
 
 ## How it works
 
-The browser records the microphone with the `MediaRecorder` API and sends the audio to the Flask server, which transcribes it and returns the agent's answer. The answer is read aloud either from audio synthesized on the server or by the browser's own French voice.
+The browser records the microphone with the `MediaRecorder` API and sends the audio to the Flask server, which transcribes it and returns the agent's answer. In the rescheduling conversation, the answer is read aloud either from audio synthesized on the server or by the browser's own French voice.
 
 Every agent talks to the models through a common interface, `BaseAIModel` (`basic`, `reflexion`, `parse`, `synthesize`, `transcribe`), so the backend can be swapped without touching the agents:
 
-- `APIClient` works with any OpenAI-compatible API for chat, transcription and structured outputs. With OpenAI it uses `gpt-4o-mini` (dialogue and extraction), `gpt-4o-mini-transcribe` and `gpt-4o-mini-tts`; with [Groq](https://groq.com/), which has a free tier, it uses `gpt-oss-120b` for the dialogue, `gpt-oss-20b` for structured extraction and `whisper-large-v3-turbo`. Google Cloud Text-to-Speech can be used for the French voice. The `reflexion` method (`o4-mini` with OpenAI) is not used by the current agents.
+- `APIClient` works with two OpenAI-compatible providers for chat, transcription and structured outputs. With OpenAI it uses `gpt-4o-mini` (dialogue and extraction), `gpt-4o-mini-transcribe` and `gpt-4o-mini-tts`; with [Groq](https://groq.com/), which has a free tier, it uses `gpt-oss-120b` for the dialogue, `gpt-oss-20b` for structured extraction and `whisper-large-v3-turbo`. Google Cloud Text-to-Speech can be used for the French voice. The `reflexion` method (`o4-mini` with OpenAI) is not used by the current agents.
 - `LocalClient` is an unfinished stub running Hugging Face models locally: transcription (Whisper) and French speech (MMS-TTS) work, but its chat model (DialoGPT-small) is a placeholder that cannot hold a French conversation or extract structured data. It is not wired into the agents.
 
 ```
@@ -54,7 +54,7 @@ web/                         Flask app, templates, stylesheet and recording scri
 tests/                       pytest suite, no API key needed
 ```
 
-The report on the societal and environmental impact of the project (data privacy, algorithmic bias, energy use) is available in [docs/secretaryai.pdf](docs/secretaryai.pdf), in French.
+The team's two-page report on the societal and environmental impact of the project (data privacy, algorithmic bias, energy use), written in French in May 2025, is available in [docs/secretaryai.pdf](docs/secretaryai.pdf). It predates the final implementation, so the tools it names (Mistral, LLaMA, pyttsx3, GitLab CI) differ from the ones in this repository.
 
 ## Getting started
 
@@ -89,7 +89,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-The tests cover the calendar logic, the rescheduling conversation, the prescription model and PDF generation, the demo mailbox, and every web route, using fake agents so that no API key, microphone or mailbox is needed. On each push, GitHub Actions also builds the Docker image and checks that the demo starts.
+The tests cover the calendar logic, the rescheduling conversation, the prescription model and PDF generation, the demo mailbox, and all API endpoints and most pages of the web app, using fake agents so that no API key, microphone or mailbox is needed. On each push, GitHub Actions also builds the Docker image and checks that the demo starts.
 
 ## Limitations
 
