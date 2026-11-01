@@ -1,7 +1,6 @@
 # Secretary AI
 
-[![Tests](https://github.com/tnadiedjoa/Secretary-AI/actions/workflows/tests.yml/badge.svg)](https://github.com/tnadiedjoa/Secretary-AI/actions/workflows/tests.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![tests](https://github.com/tnadiedjoa/Secretary-AI/actions/workflows/tests.yml/badge.svg)](https://github.com/tnadiedjoa/Secretary-AI/actions/workflows/tests.yml)
 
 Voice and language model assistants that take over repetitive tasks of a medical secretary: writing prescriptions from a doctor's dictation, triaging the office inbox and rescheduling appointments over a spoken conversation.
 
