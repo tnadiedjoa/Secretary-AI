@@ -54,7 +54,7 @@ web/                         Flask app, templates, stylesheet and recording scri
 tests/                       pytest suite, no API key needed
 ```
 
-The team's two-page report on the societal and environmental impact of the project (data privacy, algorithmic bias, energy use), written in French in May 2025, is available in [docs/secretaryai.pdf](docs/secretaryai.pdf). It predates the final implementation, so the tools it names (Mistral, LLaMA, pyttsx3, GitLab CI) differ from the ones in this repository.
+The team's two-page report on the societal and environmental impact of the project (data privacy, algorithmic bias, energy use), written in French in May 2025, is available in [docs/societal_impact_report_fr.pdf](docs/societal_impact_report_fr.pdf). It predates the final implementation, so the tools it names (Mistral, LLaMA, pyttsx3, GitLab CI) differ from the ones in this repository.
 
 ## Getting started
 
